@@ -1,15 +1,12 @@
 import { Router } from 'express'
 import {
-  emailVerifyController,
   forgotPasswordController,
   loginController,
   logoutController,
   registerController,
-  resendVerifyEmailController
 } from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
-  emailVerifyTokenValidator,
   forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
@@ -55,11 +52,11 @@ userRouters.post(
  * Method :Post
  * Body: {email_verify_token:string}
  */
-userRouters.post(
-  '/verify-email',
-  emailVerifyTokenValidator,
-  wrapRequestHandler(emailVerifyController)
-)
+// userRouters.post(
+//   '/verify-email',
+//   emailVerifyTokenValidator,
+//   wrapRequestHandler(emailVerifyController)
+// )
 
 /**
  * Resend verify email
@@ -68,11 +65,11 @@ userRouters.post(
  * Header:{Authorization : Bearer <access_token>}
  * Body: {}
  */
-userRouters.post(
-  '/resend-verify-email',
-  accessTokenValidator,
-  wrapRequestHandler(resendVerifyEmailController)
-)
+// userRouters.post(
+//   '/resend-verify-email',
+//   accessTokenValidator,
+//   wrapRequestHandler(resendVerifyEmailController)
+// )
 
 /**
  * Forgot password

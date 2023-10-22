@@ -4,7 +4,7 @@ import databaseService from './services/database.services'
 import dotenv from 'dotenv'
 import { defaultErrorHandler } from './middlewares/error.middleware'
 const app = express()
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 8888
 import cors from 'cors'
 dotenv.config()
 app.use(cors())

@@ -11,22 +11,6 @@ import { validate } from '~/utils/validation'
 export const registerValidator = validate(
   checkSchema(
     {
-      name: {
-        notEmpty: {
-          errorMessage: userMessage.NAME_IS_REQUIRED
-        },
-        isString: {
-          errorMessage: userMessage.NAME_MUST_BE_A_STRING
-        },
-        isLength: {
-          options: {
-            min: 1,
-            max: 100
-          },
-          errorMessage: userMessage.NAME_LENGTH_MUST_BE_FROM_1_TO_100
-        },
-        trim: true
-      },
       email: {
         notEmpty: {
           errorMessage: userMessage.EMAIL_IS_REQUIRED
@@ -39,11 +23,10 @@ export const registerValidator = validate(
           options: async (value, { req }) => {
             const result = await userServices.checkEmailExist(value)
             if (result) {
-              throw new Error('Email already exists')
+              throw new Error(userMessage.EMAIL_ALREADY_EXIST)
             }
             return true
           },
-          errorMessage: userMessage.EMAIL_ALREADY_EXIST
         }
       },
       password: {
@@ -104,18 +87,6 @@ export const registerValidator = validate(
           },
           errorMessage: userMessage.CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD
         }
-      },
-      date_of_birth: {
-        notEmpty: {
-          errorMessage: userMessage.DATE_OF_BIRTH_IS_REQUIRED
-        },
-        isISO8601: {
-          options: {
-            strict: true,
-            strictSeparator: true
-          },
-          errorMessage: userMessage.DATE_OF_BIRTH_MUST_BE_ISO8601
-        }
       }
     },
     ['body']
@@ -140,7 +111,10 @@ export const loginValidator = validate(
               password: hashPassword(req.body.password)
             })
             if (!user) {
-              throw new Error(userMessage.EMAIL_OR_PASSWORD_IS_INCORRECT)
+              throw new ErrorWithStatus({
+                message: userMessage.EMAIL_OR_PASSWORD_IS_INCORRECT,
+                status: httpStatus.NOT_FOUND
+              })
             }
             req.user = user
             return true

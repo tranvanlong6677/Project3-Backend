@@ -33,8 +33,8 @@ export const registerController = async (
   req: Request<ParamsDictionary, any, RegisterRequestBody>,
   res: Response
 ) => {
+  console.log(req.body)
   const result = await userServices.register(req.body)
-  console.log('register', req.body)
   return res.json({
     message: userMessage.REGISTER_SUCCESS,
     result
@@ -50,60 +50,59 @@ export const logoutController = async (
   return res.json(result)
 }
 
-export const emailVerifyController = async (
-  req: Request<ParamsDictionary, any, VerifyEmailBody>,
-  res: Response,
-  next: NextFunction
-) => {
-  const { user_id } = req.decoded_email_verify_token as TokenPayload
-  console.log('req.decoded_email_verify_token', req.decoded_email_verify_token)
-  const user = await databaseService.users.findOne({
-    _id: new ObjectId(user_id)
-  })
-  if (!user) {
-    return res.status(httpStatus.NOT_FOUND).json({
-      message: userMessage.USER_NOT_FOUND
-    })
-  }
+// export const emailVerifyController = async (
+//   req: Request<ParamsDictionary, any, VerifyEmailBody>,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   const { user_id } = req.decoded_email_verify_token as TokenPayload
+//   const user = await databaseService.users.findOne({
+//     _id: new ObjectId(user_id)
+//   })
+//   if (!user) {
+//     return res.status(httpStatus.NOT_FOUND).json({
+//       message: userMessage.USER_NOT_FOUND
+//     })
+//   }
 
-  // đã verify thành công
-  if (user.email_verify_token === '') {
-    return res.json({
-      message: userMessage.EMAIL_ALREADY_VERIFIED_BEFORE
-    })
-  }
-  const result = await userServices.verifyEmail(user_id)
-  return res.json({
-    message: userMessage.EMAIL_VERIFY_SUCCESS,
-    result
-  })
-}
+//   // đã verify thành công
+//   if (user.email_verify_token === '') {
+//     return res.json({
+//       message: userMessage.EMAIL_ALREADY_VERIFIED_BEFORE
+//     })
+//   }
+//   const result = await userServices.verifyEmail(user_id)
+//   return res.json({
+//     message: userMessage.EMAIL_VERIFY_SUCCESS,
+//     result
+//   })
+// }
 
-export const resendVerifyEmailController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { user_id } = req.decoded_authorization as TokenPayload
-  const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
-  if (!user) {
-    throw new ErrorWithStatus({
-      message: userMessage.USER_NOT_FOUND,
-      status: httpStatus.UNAUTHORIZED
-    })
-  }
-  if (user.verify === UserVerifyStatus.Verified) {
-    throw new ErrorWithStatus({
-      message: userMessage.USER_IS_VERIFIED,
-      status: httpStatus.UNAUTHORIZED
-    })
-  }
-  await userServices.resendVerifyEmail(user_id)
-  return res.json({
-    message: userMessage.RESEND_EMAIL_SUCCESS
-    // status: httpStatus.ACCEPTED
-  })
-}
+// export const resendVerifyEmailController = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   const { user_id } = req.decoded_authorization as TokenPayload
+//   const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
+//   if (!user) {
+//     throw new ErrorWithStatus({
+//       message: userMessage.USER_NOT_FOUND,
+//       status: httpStatus.UNAUTHORIZED
+//     })
+//   }
+//   if (user.verify === UserVerifyStatus.Verified) {
+//     throw new ErrorWithStatus({
+//       message: userMessage.USER_IS_VERIFIED,
+//       status: httpStatus.UNAUTHORIZED
+//     })
+//   }
+//   await userServices.resendVerifyEmail(user_id)
+//   return res.json({
+//     message: userMessage.RESEND_EMAIL_SUCCESS
+//     // status: httpStatus.ACCEPTED
+//   })
+// }
 
 export const forgotPasswordController = async (
   req: Request<ParamsDictionary, any, ForgotPasswordRequestBody>,
@@ -112,7 +111,6 @@ export const forgotPasswordController = async (
 ) => {
   const user = req.user as User
   const user_id = user._id.toString()
-  console.log('>>> check user id', user_id)
   const result = await userServices.forgotPassword(user_id)
   return res.json(result)
 }

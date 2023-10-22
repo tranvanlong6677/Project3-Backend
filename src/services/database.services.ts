@@ -6,7 +6,7 @@ import RefreshToken from '~/models/schemas/RefreshToken.schema'
 dotenv.config()
 // const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.ika8xjo.mongodb.net/?retryWrites=true&w=majority`
 const uri =
-  'mongodb+srv://tranvanlong6677:long6677@cluster0.tppw7vm.mongodb.net/?retryWrites=true&w=majority'
+  'mongodb+srv://tranvanlong6677:long6677@prj3cluster0.msr30il.mongodb.net/?retryWrites=true&w=majority'
 
 class DatabaseService {
   private client: MongoClient

@@ -91,7 +91,6 @@ class UserService {
         token: refresh_token
       })
     )
-    console.log('email verify token', email_verify_token)
     return {
       access_token,
       refresh_token
