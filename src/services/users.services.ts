@@ -1,6 +1,6 @@
 import User from '~/models/schemas/User.schema'
 import databaseService from './database.services'
-import { RegisterRequestBody } from '~/models/requests/User.requests'
+import { RegisterRequestBody, UserInfoRequestBody } from '~/models/requests/User.requests'
 import { hashPassword } from '~/utils/crypto'
 import { signToken } from '~/utils/jwt'
 import { TokenType, UserVerifyStatus } from '~/utils/enums'
@@ -171,6 +171,24 @@ class UserService {
     console.log('forgot_password_token', forgot_password_token)
     return {
       message: userMessage.CHECK_FORGOT_PASSWORD_SUCCESS
+    }
+  }
+  async updateUserInfo(user_id: string, data_update: UserInfoRequestBody) {
+    console.log('data update', data_update)
+    const result = await databaseService.users.updateOne(
+      {
+        _id: new ObjectId(user_id)
+        // _id: new ObjectId()
+      },
+      {
+        $set: {
+          ...data_update
+        }
+      }
+    )
+    console.log(result)
+    return {
+      message: userMessage.UPDATE_USER_INFO_SUCCESS
     }
   }
 }

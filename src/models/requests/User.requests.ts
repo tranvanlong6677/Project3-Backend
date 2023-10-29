@@ -6,6 +6,7 @@ export interface RegisterRequestBody {
   password: string
   confirm_password: string
   date_of_birth: string
+  phone_number: string
 }
 export interface LoginRequestBody {
   email: string
@@ -26,5 +27,11 @@ export interface TokenPayload extends JwtPayload {
 }
 
 export interface ForgotPasswordRequestBody {
+  email: string
+}
+
+export interface UserInfoRequestBody {
+  name: string
+  address: string
   email: string
 }

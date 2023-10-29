@@ -26,7 +26,7 @@ export const registerValidator = validate(
               throw new Error(userMessage.EMAIL_ALREADY_EXIST)
             }
             return true
-          },
+          }
         }
       },
       password: {
@@ -160,6 +160,7 @@ export const accessTokenValidator = validate(
       custom: {
         options: async (value: string, { req }) => {
           const access_token = (value || '').split(' ')[1]
+          console.log('access_token', access_token)
           if (!access_token) {
             throw new ErrorWithStatus({
               message: userMessage.ACCESS_TOKEN_IS_REQUIRED,
@@ -170,6 +171,8 @@ export const accessTokenValidator = validate(
             token: access_token,
             secretOrPublicKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
           })
+          console.log('decoded_authorization', decoded_authorization)
+
           req.decoded_authorization = decoded_authorization
           return true
         }
@@ -276,6 +279,30 @@ export const forgotPasswordValidator = validate(
             throw new Error(userMessage.USER_NOT_FOUND)
           }
           req.user = user
+          return true
+        }
+      }
+    }
+  })
+)
+
+export const userInfoValidator = validate(
+  checkSchema({
+    email: {
+      trim: true,
+      custom: {
+        options: async (value, { req }) => {
+          const user = await databaseService.users.findOne({
+            email: value
+          })
+          if (!user) {
+            throw new ErrorWithStatus({
+              message: userMessage.USER_NOT_FOUND,
+              status: httpStatus.NOT_FOUND
+            })
+          }
+          req.user = user
+          req.data_update = req.body
           return true
         }
       }

@@ -4,13 +4,15 @@ import {
   loginController,
   logoutController,
   registerController,
+  updateUserInfoController
 } from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
   forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
-  registerValidator
+  registerValidator,
+  userInfoValidator
 } from '~/middlewares/users.middlewares'
 import { validate } from '../utils/validation'
 import { wrapRequestHandler } from '~/utils/handlers'
@@ -39,12 +41,7 @@ userRouters.post('/register', registerValidator, wrapRequestHandler(registerCont
  * Header: {Authorization: Bearer <access_token>}
  * Body: {refresh_token:string}
  */
-userRouters.post(
-  '/logout',
-  accessTokenValidator,
-  refreshTokenValidator,
-  wrapRequestHandler(logoutController)
-)
+userRouters.post('/logout', refreshTokenValidator, wrapRequestHandler(logoutController))
 
 /**
  * Verify email when user click on the link in email
@@ -77,10 +74,17 @@ userRouters.post(
  * Method :Post
  * Body: {email:string}
  */
+// userRouters.post(
+//   '/forgot-password',
+//   forgotPasswordValidator,
+//   wrapRequestHandler(forgotPasswordController)
+// )
+
 userRouters.post(
-  '/forgot-password',
-  forgotPasswordValidator,
-  wrapRequestHandler(forgotPasswordController)
+  '/update-user-info',
+  accessTokenValidator,
+  userInfoValidator,
+  wrapRequestHandler(updateUserInfoController)
 )
 
 export default userRouters

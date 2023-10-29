@@ -10,6 +10,7 @@ import {
   LogoutRequestBody,
   RegisterRequestBody,
   TokenPayload,
+  UserInfoRequestBody,
   VerifyEmailBody
 } from '~/models/requests/User.requests'
 import User from '~/models/schemas/User.schema'
@@ -112,5 +113,25 @@ export const forgotPasswordController = async (
   const user = req.user as User
   const user_id = user._id.toString()
   const result = await userServices.forgotPassword(user_id)
+  return res.json(result)
+}
+
+export const updateUserInfoController = async (
+  req: Request<ParamsDictionary, any, UserInfoRequestBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = req.user as User
+  console.log('>>> check user', user)
+
+  const user_id = user._id.toString()
+  // const data_update = req.data_update as UserInfoRequestBody
+  const data_update = {
+    email: req.body.email,
+    address: req.body.address,
+    name: req.body.name
+  }
+
+  const result = await userServices.updateUserInfo(user_id, data_update)
   return res.json(result)
 }

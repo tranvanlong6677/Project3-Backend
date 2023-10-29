@@ -6,6 +6,7 @@ interface UserType {
   email: string
   date_of_birth?: Date
   password: string
+  phone_number: string
   created_at?: Date
   updated_at?: Date
   email_verify_token?: string // jwt hoặc '' nếu đã xác thực email
@@ -20,6 +21,7 @@ export default class User {
   date_of_birth?: Date
   email: string
   password: string
+  phone_number: string
   created_at: Date
   updated_at: Date
   location: string // optional
@@ -31,6 +33,7 @@ export default class User {
     this.name = user.name || ''
     this.email = user.email
     this.password = user.password
+    this.phone_number = user.phone_number
     this.location = user.location || ''
     this.username = user.username || ''
     this.avatar = user.avatar || ''
