@@ -6,6 +6,11 @@ import { defaultErrorHandler } from './middlewares/error.middleware'
 const app = express()
 const port = process.env.PORT || 8888
 import cors from 'cors'
+import { initFolder } from './utils/files'
+import carRouters from './routes/cars.routes'
+import addressRouters from './routes/address.routes'
+initFolder()
+
 dotenv.config()
 app.use(cors())
 // connect database
@@ -15,6 +20,9 @@ databaseService.run()
 // parse req.body
 app.use(express.json())
 app.use('/users', userRouters)
+app.use('/cars', carRouters)
+app.use('/address', addressRouters)
+
 app.use(defaultErrorHandler)
 
 app.listen(port, () => {

@@ -1,17 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
-import httpStatus from '~/constants/httpStatus'
 import { userMessage } from '~/constants/messages'
-import { ErrorWithStatus } from '~/models/Errors'
 import {
   ForgotPasswordRequestBody,
   LoginRequestBody,
   LogoutRequestBody,
   RegisterRequestBody,
-  TokenPayload,
-  UserInfoRequestBody,
-  VerifyEmailBody
+  UserInfoRequestBody
 } from '~/models/requests/User.requests'
 import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'

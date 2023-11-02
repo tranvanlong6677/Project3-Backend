@@ -38,5 +38,13 @@ export const userMessage = {
   EMAIL_ALREADY_VERIFIED_BEFORE: 'Email already verified before',
   EMAIL_VERIFY_SUCCESS: 'Email verified successfully',
   CHECK_FORGOT_PASSWORD_SUCCESS: 'Check forgot password success',
-  UPDATE_USER_INFO_SUCCESS: 'Update user info successfully'
+  UPDATE_USER_INFO_SUCCESS: 'Update user info successfully',
+  CREATE_A_CAR_SUCCESS: 'Create a car successfully',
+  LICENSE_PLATE_IS_REQUIRED: 'License plate is required',
+  IMAGE_IS_REQUIRED: 'Image is required',
+  TYPE_CAR_IS_REQUIRED: 'Type of car is required',
+  DEPOSIT_IS_REQUIRED: 'Deposit is required',
+  PRICE_PER_DAY_IS_REQUIRED: 'Price per day is required',
+  COMPANY_IS_REQUIRED: 'Company is required',
+  GET_ALL_CAR_SUCCESS:'Get all cars successfully'
 } as const
