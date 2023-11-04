@@ -1,7 +1,8 @@
 import { Router } from 'express'
 import {
   createNewCarController,
-  getAllCarController
+  getAllCarController,
+  getAllTypeCarController
 } from '~/controllers/cars.controllers'
 import { dataCreateCarValidator } from '~/middlewares/cars.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
@@ -9,10 +10,11 @@ import { wrapRequestHandler } from '~/utils/handlers'
 const carRouters = Router()
 
 carRouters.post(
-  '/create-new-car',
+  '/create',
   dataCreateCarValidator,
   wrapRequestHandler(createNewCarController)
 )
-carRouters.get('/get-all-cars', wrapRequestHandler(getAllCarController))
+carRouters.get('/all', wrapRequestHandler(getAllCarController))
+carRouters.get('/all-type', wrapRequestHandler(getAllTypeCarController))
 
 export default carRouters

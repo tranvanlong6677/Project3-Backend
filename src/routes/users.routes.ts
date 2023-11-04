@@ -17,7 +17,10 @@ import {
 import { validate } from '../utils/validation'
 import { wrapRequestHandler } from '~/utils/handlers'
 import { uploadImageController } from '~/controllers/medias.controllers'
-import { createNewCarController, getAllCarController } from '~/controllers/cars.controllers'
+import {
+  createNewCarController,
+  getAllCarController
+} from '~/controllers/cars.controllers'
 import { dataCreateCarValidator } from '~/middlewares/cars.middlewares'
 const userRouters = Router()
 
@@ -91,6 +94,5 @@ userRouters.post(
 )
 
 userRouters.post('/upload-image', wrapRequestHandler(uploadImageController))
-
 
 export default userRouters

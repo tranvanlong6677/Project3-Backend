@@ -18,11 +18,19 @@ export const loginController = async (
   res: Response
 ) => {
   const user = req.user as User
+  const userClone = {
+    email: user.email,
+    name: user.name,
+    avatar: user.avatar,
+    _id: user._id,
+    date_of_birth: user.date_of_birth
+  }
   const user_id = user._id as ObjectId
   const result = await userServices.login(user_id.toString())
   return res.json({
     message: userMessage.LOGIN_SUCCESS,
-    result
+    result,
+    user: userClone
   })
 }
 

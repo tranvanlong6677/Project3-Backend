@@ -7,7 +7,13 @@ import databaseService from './database.services'
 class CarService {
   async createNewCar(payload: CreateANewCarRequestBody) {
     const result = await databaseService.cars.insertOne(
-      new Car({ _id: new ObjectId(), ...payload, status: false })
+      new Car({
+        _id: new ObjectId(),
+        ...payload,
+        status: false,
+        quantity_of_trips: 0,
+        owner_id: new ObjectId(payload.owner_id)
+      })
     )
     return {
       message: userMessage.CREATE_A_CAR_SUCCESS,
@@ -19,6 +25,11 @@ class CarService {
     console.log('result', result)
     return result
     // message: userMessage.GET_ALL_CAR_SUCCESS,
+  }
+  async getAllTypeCars() {
+    const result = await databaseService.typeCars.find({}).toArray()
+    console.log('result', result)
+    return result
   }
 }
 

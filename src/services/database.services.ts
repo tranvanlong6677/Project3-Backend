@@ -6,6 +6,7 @@ import Car from '~/models/schemas/Car.schema'
 import Province from '~/models/schemas/Province.schema'
 import District from '~/models/schemas/District.schema'
 import Ward from '~/models/schemas/Ward.schema'
+import TypeCar from '~/models/schemas/TypeCar.Schema'
 
 dotenv.config()
 // const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.ika8xjo.mongodb.net/?retryWrites=true&w=majority`
@@ -59,6 +60,9 @@ class DatabaseService {
   }
   get wards(): Collection<Ward> {
     return this.db.collection('wards')
+  }
+  get typeCars(): Collection<TypeCar> {
+    return this.db.collection('type_car')
   }
 }
 const databaseService = new DatabaseService()

@@ -3,7 +3,6 @@ import databaseServices from './database.services'
 class addressService {
   async getAllProvince() {
     const listProvince = await databaseServices.provinces.find({}).toArray()
-    console.log('>>> check ', listProvince)
     return listProvince
   }
   async getDistrictByProvinceService(provinceCode: string) {
@@ -20,7 +19,6 @@ class addressService {
         parent_code: districtCode
       })
       .toArray()
-    console.log('>>> check listWardByDistrict', listWardByDistrict)
     return listWardByDistrict
   }
 }

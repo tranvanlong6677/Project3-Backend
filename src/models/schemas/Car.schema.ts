@@ -6,8 +6,15 @@ interface CarType {
   price_per_day: number
   status: boolean
   deposit: number
-  type_car: string
+  type_car: number
   image: string
+  quantity_of_trips: number
+  address: {
+    provinceCode: string
+    districtCode: string
+    wardCode: string
+  }
+  owner_id: ObjectId
 }
 export default class Car {
   _id: ObjectId
@@ -16,8 +23,16 @@ export default class Car {
   price_per_day: number
   status: boolean
   deposit: number
-  type_car: string
+  type_car: number
   image: string
+  quantity_of_trips: number
+  address: {
+    provinceCode: string
+    districtCode: string
+    wardCode: string
+  }
+  owner_id: ObjectId
+
   constructor(car: CarType) {
     this._id = car._id || new ObjectId()
     this.license_plate = car.license_plate
@@ -27,5 +42,8 @@ export default class Car {
     this.deposit = car.deposit
     this.type_car = car.type_car
     this.image = car.image
+    this.quantity_of_trips = car.quantity_of_trips
+    this.address = car.address
+    this.owner_id = car.owner_id
   }
 }

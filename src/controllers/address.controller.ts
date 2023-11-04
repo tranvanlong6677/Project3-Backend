@@ -17,7 +17,6 @@ export const getDistrictByProvinceController = async (req: Request, res: Respons
 
 export const getWardByDistrictController = async (req: Request, res: Response) => {
   const districtCode = req.params.districtCode
-  console.log('districtCode', districtCode)
   const result =
     districtCode !== '-1'
       ? await addressServices.getWardByDistrictService(districtCode)
