@@ -155,7 +155,6 @@ class UserService {
 
   async forgotPassword(user_id: string) {
     const forgot_password_token = await this.signForgotPasswordToken(user_id)
-    console.log('>>> check sign', forgot_password_token)
     const result = await databaseService.users.updateOne(
       { _id: new ObjectId(user_id) },
       {
@@ -174,7 +173,6 @@ class UserService {
     }
   }
   async updateUserInfo(user_id: string, data_update: UserInfoRequestBody) {
-    console.log('data update', data_update)
     const result = await databaseService.users.updateOne(
       {
         _id: new ObjectId(user_id)
@@ -186,7 +184,6 @@ class UserService {
         }
       }
     )
-    console.log(result)
     return {
       message: userMessage.UPDATE_USER_INFO_SUCCESS
     }

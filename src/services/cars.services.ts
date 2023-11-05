@@ -22,13 +22,11 @@ class CarService {
   }
   async getAllCars() {
     const result = await databaseService.cars.find({}).toArray()
-    console.log('result', result)
     return result
     // message: userMessage.GET_ALL_CAR_SUCCESS,
   }
   async getAllTypeCars() {
     const result = await databaseService.typeCars.find({}).toArray()
-    console.log('result', result)
     return result
   }
 }

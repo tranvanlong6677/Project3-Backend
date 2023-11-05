@@ -38,7 +38,6 @@ export const registerController = async (
   req: Request<ParamsDictionary, any, RegisterRequestBody>,
   res: Response
 ) => {
-  console.log(req.body)
   const result = await userServices.register(req.body)
   return res.json({
     message: userMessage.REGISTER_SUCCESS,
@@ -126,7 +125,6 @@ export const updateUserInfoController = async (
   next: NextFunction
 ) => {
   const user = req.user as User
-  console.log('>>> check user', user)
 
   const user_id = user._id.toString()
   // const data_update = req.data_update as UserInfoRequestBody

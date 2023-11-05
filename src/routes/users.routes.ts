@@ -86,8 +86,8 @@ userRouters.post('/logout', refreshTokenValidator, wrapRequestHandler(logoutCont
 //   wrapRequestHandler(forgotPasswordController)
 // )
 
-userRouters.post(
-  '/update-user-info',
+userRouters.put(
+  '/update',
   accessTokenValidator,
   userInfoValidator,
   wrapRequestHandler(updateUserInfoController)

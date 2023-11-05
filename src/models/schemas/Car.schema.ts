@@ -1,13 +1,14 @@
 import { ObjectId } from 'mongodb'
 interface CarType {
   _id: ObjectId
+  name: string
   license_plate: string
   company: string
   price_per_day: number
   status: boolean
   deposit: number
   type_car: number
-  image: string
+  image: File
   quantity_of_trips: number
   address: {
     provinceCode: string
@@ -18,13 +19,14 @@ interface CarType {
 }
 export default class Car {
   _id: ObjectId
+  name: string
   license_plate: string
   company: string
   price_per_day: number
   status: boolean
   deposit: number
   type_car: number
-  image: string
+  image: File
   quantity_of_trips: number
   address: {
     provinceCode: string
@@ -35,6 +37,7 @@ export default class Car {
 
   constructor(car: CarType) {
     this._id = car._id || new ObjectId()
+    this.name = car.name || ''
     this.license_plate = car.license_plate
     this.company = car.company
     this.price_per_day = car.price_per_day

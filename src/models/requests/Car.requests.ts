@@ -7,7 +7,7 @@ export interface CreateANewCarRequestBody {
   price_per_day: number
   deposit: number
   type_car: number
-  image: string
+  image: File
   address: {
     provinceCode: string
     districtCode: string

@@ -11,7 +11,7 @@ const carRouters = Router()
 
 carRouters.post(
   '/create',
-  dataCreateCarValidator,
+  // dataCreateCarValidator,
   wrapRequestHandler(createNewCarController)
 )
 carRouters.get('/all', wrapRequestHandler(getAllCarController))

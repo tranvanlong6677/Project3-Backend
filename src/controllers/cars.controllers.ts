@@ -4,10 +4,12 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import carServices from '~/services/cars.services'
 
 export const createNewCarController = async (
-  req: Request<ParamsDictionary, any, CreateANewCarRequestBody>,
+  // req: Request<ParamsDictionary, any, CreateANewCarRequestBody>,
+  req: any,
   res: Response
 ) => {
   const dataNewCar: CreateANewCarRequestBody = req.body
+  console.log('req.image', req.files)
   const result = await carServices.createNewCar(dataNewCar)
   return res.json(result)
 }
