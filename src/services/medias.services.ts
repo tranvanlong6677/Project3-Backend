@@ -16,6 +16,7 @@ class MediaService {
           .jpeg()
           .toFile(UPLOAD_DIR + `/${fullName}.jpg`)
         fs.unlinkSync(file.filepath)
+
         return {
           url: isProduction
             ? `${process.env.HOST}/static/image/${fullName}.jpg`
