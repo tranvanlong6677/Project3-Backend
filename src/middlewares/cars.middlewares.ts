@@ -9,7 +9,6 @@ export const dataCreateCarValidator = validate(
     license_plate: {
       custom: {
         options: async (value, { req }) => {
-          console.log('req.body', req.body)
           if (!value) {
             throw new ErrorWithStatus({
               message: userMessage.LICENSE_PLATE_IS_REQUIRED,
@@ -71,20 +70,20 @@ export const dataCreateCarValidator = validate(
           return true
         }
       }
-    },
-    image: {
-      custom: {
-        options: async (value, { req }) => {
-          console.log('image', value)
-          if (!value) {
-            throw new ErrorWithStatus({
-              message: userMessage.IMAGE_IS_REQUIRED,
-              status: httpStatus.UNAUTHORIZED
-            })
-          }
-          return true
-        }
-      }
     }
+    // image: {
+    //   custom: {
+    //     options: async (value, { req }) => {
+    //       console.log('image', value)
+    //       if (!value) {
+    //         throw new ErrorWithStatus({
+    //           message: userMessage.IMAGE_IS_REQUIRED,
+    //           status: httpStatus.UNAUTHORIZED
+    //         })
+    //       }
+    //       return true
+    //     }
+    //   }
+    // }
   })
 )

@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb'
-import { UserVerifyStatus } from '../../utils/enums'
 interface UserType {
   _id?: ObjectId
   name?: string
@@ -9,11 +8,11 @@ interface UserType {
   phone_number: string
   created_at?: Date
   updated_at?: Date
-  email_verify_token?: string // jwt hoặc '' nếu đã xác thực email
-  forgot_password_token?: string // jwt hoặc '' nếu đã xác thực email
-  location?: string // optional
-  username?: string // optional
-  avatar?: string // optional
+  address: {
+    provinceCode: string
+    districtCode: string
+    wardCode: string
+  }
 }
 export default class User {
   _id: ObjectId
@@ -24,9 +23,11 @@ export default class User {
   phone_number: string
   created_at: Date
   updated_at: Date
-  location: string // optional
-  username: string // optional
-  avatar: string // optional
+  address: {
+    provinceCode: string
+    districtCode: string
+    wardCode: string
+  }
   constructor(user: UserType) {
     const date = new Date()
     this._id = user._id || new ObjectId()
@@ -34,11 +35,13 @@ export default class User {
     this.email = user.email
     this.password = user.password
     this.phone_number = user.phone_number
-    this.location = user.location || ''
-    this.username = user.username || ''
-    this.avatar = user.avatar || ''
     this.created_at = user.created_at || date
     this.updated_at = user.updated_at || date
     this.date_of_birth = user.date_of_birth || new Date('01/01/1970')
+    this.address = user.address || {
+      provinceCode: '-1',
+      districtCode: '-1',
+      wardCode: '-1'
+    }
   }
 }

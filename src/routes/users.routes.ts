@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import {
-  forgotPasswordController,
   loginController,
   logoutController,
   registerController,
@@ -8,20 +7,13 @@ import {
 } from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
-  forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
   userInfoValidator
 } from '~/middlewares/users.middlewares'
-import { validate } from '../utils/validation'
 import { wrapRequestHandler } from '~/utils/handlers'
-import { uploadImageController } from '~/controllers/medias.controllers'
-import {
-  createNewCarController,
-  getAllCarController
-} from '~/controllers/cars.controllers'
-import { dataCreateCarValidator } from '~/middlewares/cars.middlewares'
+
 const userRouters = Router()
 
 /**
@@ -93,6 +85,6 @@ userRouters.put(
   wrapRequestHandler(updateUserInfoController)
 )
 
-userRouters.post('/upload-image', wrapRequestHandler(uploadImageController))
+// userRouters.post('/upload-image', wrapRequestHandler(uploadImageController))
 
 export default userRouters

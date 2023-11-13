@@ -1,16 +1,19 @@
 import { CreateANewCarRequestBody } from '~/models/requests/Car.requests'
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import carServices from '~/services/cars.services'
+import databaseService from '~/services/database.services'
 
 export const createNewCarController = async (
-  // req: Request<ParamsDictionary, any, CreateANewCarRequestBody>,
-  req: any,
+  req: Request<ParamsDictionary, any, CreateANewCarRequestBody>,
   res: Response
 ) => {
+  // await databaseService.cars.deleteMany({})
+  console.log('req.body create car controller', req.body)
+
   const dataNewCar: CreateANewCarRequestBody = req.body
-  console.log('req.image', req.files)
   const result = await carServices.createNewCar(dataNewCar)
+
   return res.json(result)
 }
 

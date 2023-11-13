@@ -71,14 +71,17 @@ class UserService {
 
   async register(payload: RegisterRequestBody) {
     const user_id = new ObjectId()
-    const email_verify_token = await this.signEmailVerifyToken(user_id.toString())
     await databaseService.users.insertOne(
       new User({
         _id: user_id,
         ...payload,
-        email_verify_token,
         date_of_birth: new Date(payload.date_of_birth),
-        password: hashPassword(payload.password)
+        password: hashPassword(payload.password),
+        address: {
+          provinceCode: '-1',
+          districtCode: '-1',
+          wardCode: '-1'
+        }
       })
     )
     // const user_id = result.insertedId.toString()

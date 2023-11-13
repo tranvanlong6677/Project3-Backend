@@ -10,20 +10,19 @@ import {
   UserInfoRequestBody
 } from '~/models/requests/User.requests'
 import User from '~/models/schemas/User.schema'
-import databaseService from '~/services/database.services'
 import userServices from '~/services/users.services'
-import { UserVerifyStatus } from '~/utils/enums'
 export const loginController = async (
   req: Request<ParamsDictionary, any, LoginRequestBody>,
   res: Response
 ) => {
   const user = req.user as User
+  console.log('user login', user)
   const userClone = {
     email: user.email,
     name: user.name,
-    avatar: user.avatar,
     _id: user._id,
-    date_of_birth: user.date_of_birth
+    date_of_birth: user.date_of_birth,
+    phone_number: user.phone_number
   }
   const user_id = user._id as ObjectId
   const result = await userServices.login(user_id.toString())
@@ -129,11 +128,9 @@ export const updateUserInfoController = async (
   const user_id = user._id.toString()
   // const data_update = req.data_update as UserInfoRequestBody
   const data_update = {
-    email: req.body.email,
-    address: req.body.address,
-    name: req.body.name
+    address: req.body.address
   }
-
+  console.log('data_update', data_update)
   const result = await userServices.updateUserInfo(user_id, data_update)
   return res.json(result)
 }

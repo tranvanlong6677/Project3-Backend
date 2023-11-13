@@ -46,5 +46,6 @@ export const userMessage = {
   DEPOSIT_IS_REQUIRED: 'Deposit is required',
   PRICE_PER_DAY_IS_REQUIRED: 'Price per day is required',
   COMPANY_IS_REQUIRED: 'Company is required',
-  GET_ALL_CAR_SUCCESS:'Get all cars successfully'
+  GET_ALL_CAR_SUCCESS: 'Get all cars successfully',
+  UPLOAD_SUCCESS: 'Upload image successfully'
 } as const

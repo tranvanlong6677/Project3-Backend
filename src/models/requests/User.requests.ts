@@ -31,7 +31,9 @@ export interface ForgotPasswordRequestBody {
 }
 
 export interface UserInfoRequestBody {
-  name: string
-  address: string
-  email: string
+  address: {
+    provinceCode: string
+    districtCode: string
+    wardCode: string
+  }
 }
