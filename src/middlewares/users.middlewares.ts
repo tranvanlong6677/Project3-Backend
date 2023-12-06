@@ -166,10 +166,17 @@ export const accessTokenValidator = validate(
               status: httpStatus.UNAUTHORIZED
             })
           }
-          const decoded_authorization = await verifyToken({
+          const decoded_authorization: any = await verifyToken({
             token: access_token,
             secretOrPublicKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
           })
+          if (decoded_authorization === 'Unauthorize') {
+            console.log(111)
+            throw new ErrorWithStatus({
+              message: userMessage.ACCESS_TOKEN_IS_REQUIRED,
+              status: httpStatus.UNAUTHORIZED
+            })
+          }
 
           req.decoded_authorization = decoded_authorization
           return true

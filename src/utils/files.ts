@@ -24,7 +24,7 @@ export const handleUploadImage = async (req: Request) => {
     keepExtensions: true,
     maxFileSize: 3000 * 1024 * 1024,
     filename: () => {
-      console.log(req.params)
+      console.log('hihi', req.params)
       return req.params.carId
     },
     filter: ({ name, originalFilename, mimetype }: Part) => {

@@ -6,7 +6,9 @@ import {
   ForgotPasswordRequestBody,
   LoginRequestBody,
   LogoutRequestBody,
+  RefreshTokenReqBody,
   RegisterRequestBody,
+  TokenPayload,
   UserInfoRequestBody
 } from '~/models/requests/User.requests'
 import User from '~/models/schemas/User.schema'
@@ -53,69 +55,18 @@ export const logoutController = async (
   return res.json(result)
 }
 
-// export const emailVerifyController = async (
-//   req: Request<ParamsDictionary, any, VerifyEmailBody>,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const { user_id } = req.decoded_email_verify_token as TokenPayload
-//   const user = await databaseService.users.findOne({
-//     _id: new ObjectId(user_id)
-//   })
-//   if (!user) {
-//     return res.status(httpStatus.NOT_FOUND).json({
-//       message: userMessage.USER_NOT_FOUND
-//     })
-//   }
-
-//   // đã verify thành công
-//   if (user.email_verify_token === '') {
-//     return res.json({
-//       message: userMessage.EMAIL_ALREADY_VERIFIED_BEFORE
-//     })
-//   }
-//   const result = await userServices.verifyEmail(user_id)
-//   return res.json({
-//     message: userMessage.EMAIL_VERIFY_SUCCESS,
-//     result
-//   })
-// }
-
-// export const resendVerifyEmailController = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const { user_id } = req.decoded_authorization as TokenPayload
-//   const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
-//   if (!user) {
-//     throw new ErrorWithStatus({
-//       message: userMessage.USER_NOT_FOUND,
-//       status: httpStatus.UNAUTHORIZED
-//     })
-//   }
-//   if (user.verify === UserVerifyStatus.Verified) {
-//     throw new ErrorWithStatus({
-//       message: userMessage.USER_IS_VERIFIED,
-//       status: httpStatus.UNAUTHORIZED
-//     })
-//   }
-//   await userServices.resendVerifyEmail(user_id)
-//   return res.json({
-//     message: userMessage.RESEND_EMAIL_SUCCESS
-//     // status: httpStatus.ACCEPTED
-//   })
-// }
-
-export const forgotPasswordController = async (
-  req: Request<ParamsDictionary, any, ForgotPasswordRequestBody>,
-  res: Response,
-  next: NextFunction
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
+  res: Response
 ) => {
-  const user = req.user as User
-  const user_id = user._id.toString()
-  const result = await userServices.forgotPassword(user_id)
-  return res.json(result)
+  const { refresh_token } = req.body
+  console.log(1)
+  const { user_id, verify } = req.decoded_refresh_token as TokenPayload
+  const result = await userServices.refreshToken({ user_id, verify, refresh_token })
+  return res.json({
+    message: userMessage.REFRESH_TOKEN_SUCCESS,
+    result
+  })
 }
 
 export const updateUserInfoController = async (

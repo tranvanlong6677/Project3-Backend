@@ -15,3 +15,11 @@ export interface CreateANewCarRequestBody {
   }
   owner_id: ObjectId
 }
+
+export interface BookingReqBody {
+  ownerId: string
+  carId: string
+  start_date: string
+  end_date: string
+  customerId: string
+}

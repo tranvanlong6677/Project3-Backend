@@ -2,6 +2,7 @@ import { Router } from 'express'
 import {
   loginController,
   logoutController,
+  refreshTokenController,
   registerController,
   updateUserInfoController
 } from '~/controllers/users.controllers'
@@ -83,6 +84,12 @@ userRouters.put(
   accessTokenValidator,
   userInfoValidator,
   wrapRequestHandler(updateUserInfoController)
+)
+
+userRouters.post(
+  '/refresh-token',
+  refreshTokenValidator,
+  wrapRequestHandler(refreshTokenController)
 )
 
 // userRouters.post('/upload-image', wrapRequestHandler(uploadImageController))

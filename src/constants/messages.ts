@@ -47,5 +47,8 @@ export const userMessage = {
   PRICE_PER_DAY_IS_REQUIRED: 'Price per day is required',
   COMPANY_IS_REQUIRED: 'Company is required',
   GET_ALL_CAR_SUCCESS: 'Get all cars successfully',
-  UPLOAD_SUCCESS: 'Upload image successfully'
+  UPLOAD_SUCCESS: 'Upload image successfully',
+  BOOKING_SUCCESS: 'Đặt xe thành công',
+  REFRESH_TOKEN_SUCCESS: 'Refresh token successfully',
+  COMPLETE_ORDER_SUCCESS: 'Complete order successfully'
 } as const

@@ -155,6 +155,25 @@ class UserService {
       result
     }
   }
+  async refreshToken({
+    user_id,
+    verify,
+    refresh_token
+  }: {
+    user_id: string
+    verify: UserVerifyStatus
+    refresh_token: string
+  }) {
+    const [new_access_token, new_refresh_token] = await Promise.all([
+      this.signAccessToken(user_id),
+      this.signRefreshToken(user_id),
+      databaseService.refreshToken.deleteOne({ token: refresh_token })
+    ])
+    return {
+      access_token: new_access_token,
+      refresh_token: new_refresh_token
+    }
+  }
 
   async forgotPassword(user_id: string) {
     const forgot_password_token = await this.signForgotPasswordToken(user_id)

@@ -37,3 +37,6 @@ export interface UserInfoRequestBody {
     wardCode: string
   }
 }
+export interface RefreshTokenReqBody {
+  refresh_token: string
+}

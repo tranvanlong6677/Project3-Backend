@@ -38,6 +38,8 @@ export const verifyToken = ({
     jwt.verify(token, secretOrPublicKey, (error, decoded) => {
       if (error) {
         throw reject(error)
+        // console.log('error11', error)
+        // resolve('Unauthorize' as any)
       }
       resolve(decoded as TokenPayload)
     })
