@@ -68,6 +68,12 @@ export const refreshTokenController = async (
     result
   })
 }
+export const getUserInfoController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const user = await userServices.getUserInfo(user_id)
+  console.log('>>> check get ref', user_id)
+  return res.json(user)
+}
 
 export const updateUserInfoController = async (
   req: Request<ParamsDictionary, any, UserInfoRequestBody>,

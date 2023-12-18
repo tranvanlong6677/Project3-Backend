@@ -25,14 +25,19 @@ export const getAllCarController = async (req: Request, res: Response) => {
   return res.json(result)
 }
 
+export const getListCarPaginateController = async (req: Request, res: Response) => {
+  const { page, perPage } = req.params
+
+  const result = await carServices.getListCarPaginate(page, perPage)
+  return res.json(result)
+}
+
 export const getAllTypeCarController = async (req: Request, res: Response) => {
   const result = await carServices.getAllTypeCars()
   return res.json(result)
 }
 
 export const bookingController = async (req: Request, res: Response) => {
-  console.log('req.body', req.body)
-  console.log('req.decoded_authorization', req.decoded_authorization)
   const body = req.body
   const decoded = req.decoded_authorization as TokenPayload
   if (body.ownerId === decoded.user_id) {
@@ -43,7 +48,6 @@ export const bookingController = async (req: Request, res: Response) => {
   }
   const dataBooking = { ...body, customerId: req.decoded_authorization?.user_id }
   const result = await carServices.bookingCar(dataBooking)
-  console.log(result)
   return res.json(result)
 }
 
@@ -64,6 +68,16 @@ export const getListBookedPaginateController = async (req: Request, res: Respons
 export const getRentalListingsController = async (req: Request, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload
   const result = await carServices.getRentalListings(user_id)
+  return res.json(result)
+}
+export const getRentalListingsPaginateController = async (
+  req: Request,
+  res: Response
+) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const { page, perPage } = req.params
+  console.log('params', req.params)
+  const result = await carServices.getRentalListingsPaginate({ user_id, page, perPage })
   return res.json(result)
 }
 

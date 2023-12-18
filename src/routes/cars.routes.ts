@@ -7,7 +7,9 @@ import {
   getAllTypeCarController,
   getListBookedController,
   getListBookedPaginateController,
-  getRentalListingsController
+  getListCarPaginateController,
+  getRentalListingsController,
+  getRentalListingsPaginateController
 } from '~/controllers/cars.controllers'
 import { uploadImageController } from '~/controllers/medias.controllers'
 import { dataCreateCarValidator } from '~/middlewares/cars.middlewares'
@@ -23,6 +25,12 @@ carRouters.post(
   wrapRequestHandler(createNewCarController)
 )
 carRouters.get('/all', accessTokenValidator, wrapRequestHandler(getAllCarController))
+carRouters.get(
+  '/page=:page/per-page=:perPage',
+  accessTokenValidator,
+  wrapRequestHandler(getListCarPaginateController)
+)
+
 carRouters.get('/all-type', wrapRequestHandler(getAllTypeCarController))
 carRouters.post('/booking', accessTokenValidator, wrapRequestHandler(bookingController))
 carRouters.get(
@@ -41,6 +49,11 @@ carRouters.get(
   '/rental-listings',
   accessTokenValidator,
   wrapRequestHandler(getRentalListingsController)
+)
+carRouters.get(
+  '/rental-listings/page/:page/per-page/:perPage',
+  accessTokenValidator,
+  wrapRequestHandler(getRentalListingsPaginateController)
 )
 
 carRouters.put(

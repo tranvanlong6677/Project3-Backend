@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import {
+  getUserInfoController,
   loginController,
   logoutController,
   refreshTokenController,
@@ -91,7 +92,7 @@ userRouters.post(
   refreshTokenValidator,
   wrapRequestHandler(refreshTokenController)
 )
-
+userRouters.get('/info', accessTokenValidator, wrapRequestHandler(getUserInfoController))
 // userRouters.post('/upload-image', wrapRequestHandler(uploadImageController))
 
 export default userRouters

@@ -99,6 +99,14 @@ class UserService {
       refresh_token
     }
   }
+  async getUserInfo(user_id: string) {
+    const user = await databaseService.users.findOne(
+      { _id: new ObjectId(user_id) },
+      { projection: { password: 0, created_at: 0, updated_at: 0 } }
+    )
+    console.log(user)
+    return user
+  }
   async checkEmailExist(email: string) {
     const user = await databaseService.users.findOne({
       email

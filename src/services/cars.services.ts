@@ -6,7 +6,9 @@ import databaseService from './database.services'
 import User from '~/models/schemas/User.schema'
 import District from '~/models/schemas/District.schema'
 import Booking from '~/models/schemas/Booking.schema'
-import { differenceInDays } from 'date-fns'
+import { differenceInDays, isBefore } from 'date-fns'
+import { ErrorWithStatus } from '~/models/Errors'
+import httpStatus from '~/constants/httpStatus'
 
 class CarService {
   async createNewCar(payload: CreateANewCarRequestBody) {
@@ -38,17 +40,67 @@ class CarService {
     return result
     // message: userMessage.GET_ALL_CAR_SUCCESS,
   }
+  async getListCarPaginate(page: string, perPage: string) {
+    const result = await databaseService.cars
+      .aggregate([
+        {
+          $facet: {
+            totalCount: [
+              {
+                $group: {
+                  _id: null, // Nhóm theo _id
+                  totalCount: { $sum: 1 } // Tính tổng số bản ghi
+                }
+              }
+            ],
+            result: [{ $skip: (+page - 1) * +perPage }, { $limit: +perPage }]
+          }
+        }
+      ])
+      .toArray()
+    return result
+  }
   async getAllTypeCars() {
     const result = await databaseService.typeCars.find({}).toArray()
     return result
   }
   async bookingCar(dataBooking: BookingReqBody) {
+    console.log('dataBooking', dataBooking)
     const carInfo = (await databaseService.cars.findOne({
       _id: new ObjectId(dataBooking.carId)
     })) as Car
     const startDate = new Date(dataBooking.start_date)
     const endDate = new Date(dataBooking.end_date)
     const quantityOfDate = differenceInDays(endDate, startDate)
+    let checkTimeDuplicate = false
+    const listBookingWithCar = await databaseService.bookings
+      .find({
+        carId: new ObjectId(dataBooking.carId)
+      })
+      .toArray()
+    // eslint-disable-next-line prettier/prettier
+    listBookingWithCar.forEach((item: any) => {
+      if (!isBefore(new Date(item.start_date), new Date(dataBooking.start_date))) {
+        if (!isBefore(new Date(dataBooking.end_date), new Date(item.start_date))) {
+          checkTimeDuplicate = true
+          // break
+        }
+      }
+      if (
+        !isBefore(new Date(dataBooking.start_date), new Date(item.start_date)) &&
+        !isBefore(new Date(item.start_date), new Date(dataBooking.end_date))
+      ) {
+        checkTimeDuplicate = true
+      }
+    })
+    // console.log('check list w car', listBookingWithCar)
+    if (checkTimeDuplicate) {
+      // return { message: 'Xe đã được đặt lịch trong thời gian mà bạn đã chọn' }
+      throw new ErrorWithStatus({
+        message: 'Xe đã được đặt lịch trong thời gian mà bạn đã chọn',
+        status: httpStatus.BAD_REQUEST
+      })
+    }
 
     const price = carInfo.price_per_day * quantityOfDate
     const result = await databaseService.bookings.insertOne(
@@ -134,9 +186,6 @@ class CarService {
     page: string
     perPage: string
   }) {
-    console.log('user_id', user_id)
-    console.log('page', page)
-    console.log('perPage', perPage)
     const idObject = new ObjectId(user_id)
     const arrId = [idObject]
     const resultJoin = await databaseService.bookings
@@ -180,6 +229,58 @@ class CarService {
     console.log('result', resultJoin)
     return resultJoin
     // const result =
+  }
+  async getRentalListingsPaginate({
+    user_id,
+    page,
+    perPage
+  }: {
+    user_id: string
+    page: string
+    perPage: string
+  }) {
+    const idObject = new ObjectId(user_id)
+    const arrId = [idObject]
+    const resultJoin = await databaseService.bookings
+      .aggregate([
+        {
+          $facet: {
+            totalCount: [
+              {
+                $match: {
+                  ownerId: { $in: arrId }
+                }
+              },
+              {
+                $group: {
+                  _id: null, // Nhóm theo _id
+                  totalCount: { $sum: 1 } // Tính tổng số bản ghi
+                }
+              }
+            ],
+            result: [
+              {
+                $match: {
+                  ownerId: { $in: arrId }
+                }
+              },
+              {
+                $lookup: {
+                  from: 'cars',
+                  localField: 'carId',
+                  foreignField: '_id',
+                  as: 'car_info'
+                }
+              },
+              { $skip: (+page - 1) * +perPage },
+              { $limit: +perPage }
+            ]
+          }
+        }
+      ])
+      .toArray()
+    console.log('result', resultJoin)
+    return resultJoin
   }
 }
 
