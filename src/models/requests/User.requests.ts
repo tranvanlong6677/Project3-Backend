@@ -36,6 +36,7 @@ export interface UserInfoRequestBody {
     districtCode: string
     wardCode: string
   }
+  name: string
 }
 export interface RefreshTokenReqBody {
   refresh_token: string

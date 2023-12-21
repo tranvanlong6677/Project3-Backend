@@ -171,7 +171,6 @@ export const accessTokenValidator = validate(
             secretOrPublicKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
           })
           if (decoded_authorization === 'Unauthorize') {
-            console.log(111)
             throw new ErrorWithStatus({
               message: userMessage.ACCESS_TOKEN_IS_REQUIRED,
               status: httpStatus.UNAUTHORIZED
@@ -209,9 +208,12 @@ export const refreshTokenValidator = validate(
                 token: value,
                 secretOrPublicKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
               })
+              console.log('value', value)
               const checkRefreshTokenIsExist = await databaseService.refreshToken.findOne(
                 { token: value }
               )
+              console.log('checkRefreshTokenIsExist', checkRefreshTokenIsExist)
+
               req.decoded_refresh_token = decoded_refresh_token
               if (!checkRefreshTokenIsExist) {
                 throw new ErrorWithStatus({

@@ -8,10 +8,10 @@ import {
   getListBookedController,
   getListBookedPaginateController,
   getListCarPaginateController,
+  getListCarsUserController,
   getRentalListingsController,
   getRentalListingsPaginateController
 } from '~/controllers/cars.controllers'
-import { uploadImageController } from '~/controllers/medias.controllers'
 import { dataCreateCarValidator } from '~/middlewares/cars.middlewares'
 import { accessTokenValidator } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
@@ -60,6 +60,11 @@ carRouters.put(
   '/complete-order',
   accessTokenValidator,
   wrapRequestHandler(conpleteOrderController)
+)
+carRouters.get(
+  '/list-cars-user/page=:page/per-page=:perPage',
+  accessTokenValidator,
+  wrapRequestHandler(getListCarsUserController)
 )
 
 // carRouters.post('/upload-image/:carId', wrapRequestHandler(uploadImageController))

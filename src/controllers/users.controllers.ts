@@ -18,13 +18,13 @@ export const loginController = async (
   res: Response
 ) => {
   const user = req.user as User
-  console.log('user login', user)
   const userClone = {
-    email: user.email,
-    name: user.name,
-    _id: user._id,
-    date_of_birth: user.date_of_birth,
-    phone_number: user.phone_number
+    email: user?.email,
+    name: user?.name,
+    _id: user?._id,
+    date_of_birth: user?.date_of_birth,
+    phone_number: user?.phone_number,
+    address: user?.address
   }
   const user_id = user._id as ObjectId
   const result = await userServices.login(user_id.toString())
@@ -59,19 +59,15 @@ export const refreshTokenController = async (
   req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
   res: Response
 ) => {
+  console.log('refresh')
   const { refresh_token } = req.body
-  console.log(1)
   const { user_id, verify } = req.decoded_refresh_token as TokenPayload
   const result = await userServices.refreshToken({ user_id, verify, refresh_token })
-  return res.json({
-    message: userMessage.REFRESH_TOKEN_SUCCESS,
-    result
-  })
+  return res.json(result)
 }
 export const getUserInfoController = async (req: Request, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload
   const user = await userServices.getUserInfo(user_id)
-  console.log('>>> check get ref', user_id)
   return res.json(user)
 }
 
@@ -81,13 +77,13 @@ export const updateUserInfoController = async (
   next: NextFunction
 ) => {
   const user = req.user as User
-
+  console.log('>>>', req.body)
   const user_id = user._id.toString()
   // const data_update = req.data_update as UserInfoRequestBody
   const data_update = {
-    address: req.body.address
+    address: req.body?.address,
+    name: req.body?.name
   }
-  console.log('data_update', data_update)
   const result = await userServices.updateUserInfo(user_id, data_update)
   return res.json(result)
 }

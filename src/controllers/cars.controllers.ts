@@ -12,11 +12,9 @@ export const createNewCarController = async (
   res: Response
 ) => {
   // await databaseService.cars.deleteMany({})
-  console.log('req.body create car controller', req.body)
 
   const dataNewCar: CreateANewCarRequestBody = req.body
   const result = await carServices.createNewCar(dataNewCar)
-  console.log('result', result)
   return res.json(result)
 }
 
@@ -46,8 +44,10 @@ export const bookingController = async (req: Request, res: Response) => {
       message: 'Không thể thuê xe của chính mình'
     })
   }
+  console.log('dat xe')
   const dataBooking = { ...body, customerId: req.decoded_authorization?.user_id }
   const result = await carServices.bookingCar(dataBooking)
+  console.log(result)
   return res.json(result)
 }
 
@@ -76,14 +76,19 @@ export const getRentalListingsPaginateController = async (
 ) => {
   const { user_id } = req.decoded_authorization as TokenPayload
   const { page, perPage } = req.params
-  console.log('params', req.params)
   const result = await carServices.getRentalListingsPaginate({ user_id, page, perPage })
   return res.json(result)
 }
 
 export const conpleteOrderController = async (req: Request, res: Response) => {
   const { booking_id, car_id } = req.body
-  console.log(car_id)
   const result = await carServices.completeOrder(booking_id, car_id)
+  return res.json(result)
+}
+
+export const getListCarsUserController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const { page, perPage } = req.params
+  const result = await carServices.getListCarsUser(user_id, +page, +perPage)
   return res.json(result)
 }

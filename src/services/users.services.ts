@@ -104,7 +104,6 @@ class UserService {
       { _id: new ObjectId(user_id) },
       { projection: { password: 0, created_at: 0, updated_at: 0 } }
     )
-    console.log(user)
     return user
   }
   async checkEmailExist(email: string) {
@@ -151,18 +150,6 @@ class UserService {
     }
   }
 
-  async resendVerifyEmail(user_id: string) {
-    const email_verify_token = await this.signEmailVerifyToken(user_id)
-    // Coi như gửi email resend
-    console.log('Resend verify email', email_verify_token)
-    const result = await databaseService.users.updateOne(
-      { _id: new ObjectId(user_id) },
-      { $set: { email_verify_token }, $currentDate: { updated_at: true } }
-    )
-    return {
-      result
-    }
-  }
   async refreshToken({
     user_id,
     verify,
@@ -177,6 +164,14 @@ class UserService {
       this.signRefreshToken(user_id),
       databaseService.refreshToken.deleteOne({ token: refresh_token })
     ])
+    await databaseService.refreshToken.insertOne(
+      new RefreshToken({
+        _id: new ObjectId(),
+        token: new_refresh_token,
+        user_id: new ObjectId(user_id)
+      })
+    )
+    console.log('new refresh token', new_refresh_token)
     return {
       access_token: new_access_token,
       refresh_token: new_refresh_token
@@ -197,13 +192,12 @@ class UserService {
       }
     )
     //  gửi email kèm link đến email người dùng kiểu : https://twitter.com/forgot-password?token=token
-    console.log('forgot_password_token', forgot_password_token)
     return {
       message: userMessage.CHECK_FORGOT_PASSWORD_SUCCESS
     }
   }
   async updateUserInfo(user_id: string, data_update: UserInfoRequestBody) {
-    const result = await databaseService.users.updateOne(
+    const result = await databaseService.users.findOneAndUpdate(
       {
         _id: new ObjectId(user_id)
         // _id: new ObjectId()
@@ -212,10 +206,16 @@ class UserService {
         $set: {
           ...data_update
         }
+      },
+      {
+        returnDocument: 'after',
+        projection: { password: 0, created_at: 0, updated_at: 0 }
       }
     )
+    console.log('result', result)
     return {
-      message: userMessage.UPDATE_USER_INFO_SUCCESS
+      message: userMessage.UPDATE_USER_INFO_SUCCESS,
+      result
     }
   }
 }

@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { TokenPayload } from '~/models/requests/User.requests'
+import { ErrorWithStatus } from '~/models/Errors'
+import httpStatus from '~/constants/httpStatus'
 
 dotenv.config()
 interface signInput {
@@ -38,8 +40,10 @@ export const verifyToken = ({
     jwt.verify(token, secretOrPublicKey, (error, decoded) => {
       if (error) {
         throw reject(error)
-        // console.log('error11', error)
-        // resolve('Unauthorize' as any)
+        // throw new ErrorWithStatus({
+        //   message: 'Error verifying token',
+        //   status: httpStatus.UNAUTHORIZED
+        // })
       }
       resolve(decoded as TokenPayload)
     })

@@ -9,8 +9,6 @@ export const uploadImageController = async (
   next: NextFunction
 ) => {
   const result = await mediasService.uploadImage(req)
-  console.log('req.params upload', req.params)
-  console.log('result', result)
   return res.status(200).json({
     message: userMessage.UPLOAD_SUCCESS,
     result: result
