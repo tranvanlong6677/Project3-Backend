@@ -8,7 +8,7 @@ interface CarType {
   status: boolean
   deposit: number
   type_car: number
-  image: File
+  image: string
   quantity_of_trips: number
   address: {
     provinceCode: string
@@ -29,7 +29,7 @@ export default class Car {
   status: boolean
   deposit: number
   type_car: number
-  image: File
+  image: string
   quantity_of_trips: number
   address: {
     provinceCode: string

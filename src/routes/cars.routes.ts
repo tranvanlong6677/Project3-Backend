@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   bookingController,
+  cancelOrderController,
   conpleteOrderController,
   createNewCarController,
   getAllCarController,
@@ -8,6 +9,7 @@ import {
   getListBookedController,
   getListBookedPaginateController,
   getListCarPaginateController,
+  getListCarSearchController,
   getListCarsUserController,
   getRentalListingsController,
   getRentalListingsPaginateController
@@ -29,6 +31,11 @@ carRouters.get(
   '/page=:page/per-page=:perPage',
   accessTokenValidator,
   wrapRequestHandler(getListCarPaginateController)
+)
+carRouters.get(
+  '/search/province-code=:provinceCode/page=:page/per-page=:perPage',
+  accessTokenValidator,
+  wrapRequestHandler(getListCarSearchController)
 )
 
 carRouters.get('/all-type', wrapRequestHandler(getAllTypeCarController))
@@ -60,6 +67,11 @@ carRouters.put(
   '/complete-order',
   accessTokenValidator,
   wrapRequestHandler(conpleteOrderController)
+)
+carRouters.delete(
+  '/cancel-order/booking-id=:bookingId',
+  accessTokenValidator,
+  wrapRequestHandler(cancelOrderController)
 )
 carRouters.get(
   '/list-cars-user/page=:page/per-page=:perPage',

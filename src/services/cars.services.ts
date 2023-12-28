@@ -4,30 +4,32 @@ import { ObjectId } from 'mongodb'
 import { userMessage } from '~/constants/messages'
 import databaseService from './database.services'
 import User from '~/models/schemas/User.schema'
-import District from '~/models/schemas/District.schema'
 import Booking from '~/models/schemas/Booking.schema'
 import { differenceInDays, isAfter, isBefore, isSameDay } from 'date-fns'
 import { ErrorWithStatus } from '~/models/Errors'
 import httpStatus from '~/constants/httpStatus'
+import Province from '~/models/schemas/Province.schema'
 
 class CarService {
   async createNewCar(payload: CreateANewCarRequestBody) {
     const owner = (await databaseService.users.findOne({
       _id: new ObjectId(payload.owner_id)
     })) as User
-    const address = (await databaseService.districts.findOne({
-      code: owner.address.districtCode
-    })) as District
+    const address = (await databaseService.provinces.findOne({
+      code: payload.address.provinceCode
+    })) as Province
+    const newId = new ObjectId()
     const result = await databaseService.cars.insertOne(
       new Car({
-        _id: new ObjectId(),
+        _id: newId,
         ...payload,
         status: false,
         quantity_of_trips: 0,
         owner_id: new ObjectId(payload.owner_id),
         owner_name: owner.name,
-        addressString: address.path_with_type || '',
-        phone_number: owner.phone_number
+        addressString: address.name_with_type || '',
+        phone_number: owner.phone_number,
+        image: `http://localhost:8888/static/image/${newId}.jpg`
       })
     )
     return {
@@ -80,7 +82,6 @@ class CarService {
       })
       .toArray()
 
-    console.log('check', quantityOfDate)
     // eslint-disable-next-line prettier/prettier
     listBookingWithCar.forEach((item: any) => {
       // Trường hợp lịch đã đặt trước đó có ngày bắt đầu là sau ngày bắt đầu lịch đặt và ngày kết thúc của lịch đặt sau ngày bắt đầu của lịch đã đặt trước đó
@@ -108,7 +109,6 @@ class CarService {
     })
     if (checkTimeDuplicate) {
       // return { message: 'Xe đã được đặt lịch trong thời gian mà bạn đã chọn' }
-      console.log(111111233232)
       throw new ErrorWithStatus({
         message: 'Xe đã được đặt lịch trong thời gian mà bạn đã chọn',
         status: httpStatus.BAD_REQUEST
@@ -116,7 +116,6 @@ class CarService {
     }
 
     const price = carInfo.price_per_day * quantityOfDate + +carInfo?.deposit
-    console.log(price)
     const result = await databaseService.bookings.insertOne(
       new Booking({
         _id: new ObjectId(),
@@ -171,6 +170,20 @@ class CarService {
     }
   }
   async completeOrder(booking_id: string, car_id: string) {
+    const bookingFind = (await databaseService.bookings.findOne({
+      _id: new ObjectId(booking_id)
+    })) as Booking
+    const dateCurrent = new Date()
+    if (
+      isAfter(new Date(bookingFind.end_date), dateCurrent) ||
+      isSameDay(new Date(bookingFind.end_date), dateCurrent)
+    ) {
+      throw new ErrorWithStatus({
+        message: 'Đơn đặt xe chưa đến thời gian kết thúc',
+        status: httpStatus.BAD_REQUEST
+      })
+    }
+
     await databaseService.bookings.updateOne({ _id: new ObjectId(booking_id) }, [
       {
         $set: {
@@ -338,7 +351,6 @@ class CarService {
         }
       ])
       .toArray()
-    console.log('>>> join', resultJoin)
     return resultJoin
   }
   async getListCarsUser(user_id: string, page: number, perPage: number) {
@@ -376,6 +388,48 @@ class CarService {
       ])
       .toArray()
     return result
+  }
+  async getListCarSearch(page: string, perPage: string, provinceCode: string) {
+    const arrProvinceCode = [provinceCode]
+
+    const result = await databaseService.cars
+      .aggregate([
+        {
+          $facet: {
+            totalCount: [
+              {
+                $match: {
+                  'address.provinceCode': { $in: arrProvinceCode }
+                }
+              },
+              {
+                $group: {
+                  _id: null, // Nhóm theo _id
+                  totalCount: { $sum: 1 } // Tính tổng số bản ghi
+                }
+              }
+            ],
+            result: [
+              {
+                $match: {
+                  'address.provinceCode': { $in: arrProvinceCode }
+                }
+              },
+              { $skip: (+page - 1) * +perPage },
+              { $limit: +perPage }
+            ]
+          }
+        }
+      ])
+      .toArray()
+    return result
+  }
+  async cancelOrder(id: string) {
+    const result = await databaseService.bookings.deleteOne({ _id: new ObjectId(id) })
+    return {
+      message: 'Hủy lịch thành công',
+      result
+    }
   }
 }
 

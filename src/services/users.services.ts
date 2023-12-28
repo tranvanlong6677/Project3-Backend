@@ -171,7 +171,6 @@ class UserService {
         user_id: new ObjectId(user_id)
       })
     )
-    console.log('new refresh token', new_refresh_token)
     return {
       access_token: new_access_token,
       refresh_token: new_refresh_token
@@ -212,7 +211,6 @@ class UserService {
         projection: { password: 0, created_at: 0, updated_at: 0 }
       }
     )
-    console.log('result', result)
     return {
       message: userMessage.UPDATE_USER_INFO_SUCCESS,
       result

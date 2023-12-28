@@ -30,6 +30,12 @@ export const getListCarPaginateController = async (req: Request, res: Response) 
   return res.json(result)
 }
 
+export const getListCarSearchController = async (req: Request, res: Response) => {
+  const { page, perPage, provinceCode } = req.params
+  const result = await carServices.getListCarSearch(page, perPage, provinceCode)
+  return res.json(result)
+}
+
 export const getAllTypeCarController = async (req: Request, res: Response) => {
   const result = await carServices.getAllTypeCars()
   return res.json(result)
@@ -44,15 +50,14 @@ export const bookingController = async (req: Request, res: Response) => {
       message: 'Không thể thuê xe của chính mình'
     })
   }
-  console.log('dat xe')
   const dataBooking = { ...body, customerId: req.decoded_authorization?.user_id }
   const result = await carServices.bookingCar(dataBooking)
-  console.log(result)
   return res.json(result)
 }
 
 export const getListBookedController = async (req: Request, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload
+
   const result = await carServices.getListBooked(user_id)
   return res.json({
     result
@@ -60,6 +65,8 @@ export const getListBookedController = async (req: Request, res: Response) => {
 }
 export const getListBookedPaginateController = async (req: Request, res: Response) => {
   const { user_id } = req.decoded_authorization as TokenPayload
+  // await databaseService.cars.deleteMany({})
+  // await databaseService.bookings.deleteMany({})
   const { page, perPage } = req.params
   const result = await carServices.getListBookedPaginate({ user_id, page, perPage })
   return res.json(result)
@@ -83,6 +90,11 @@ export const getRentalListingsPaginateController = async (
 export const conpleteOrderController = async (req: Request, res: Response) => {
   const { booking_id, car_id } = req.body
   const result = await carServices.completeOrder(booking_id, car_id)
+  return res.json(result)
+}
+export const cancelOrderController = async (req: Request, res: Response) => {
+  const { bookingId } = req.params as { bookingId: string }
+  const result = await carServices.cancelOrder(bookingId)
   return res.json(result)
 }
 

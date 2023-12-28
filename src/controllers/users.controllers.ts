@@ -59,7 +59,6 @@ export const refreshTokenController = async (
   req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
   res: Response
 ) => {
-  console.log('refresh')
   const { refresh_token } = req.body
   const { user_id, verify } = req.decoded_refresh_token as TokenPayload
   const result = await userServices.refreshToken({ user_id, verify, refresh_token })

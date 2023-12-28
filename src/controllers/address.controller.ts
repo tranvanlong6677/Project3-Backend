@@ -8,12 +8,10 @@ export const getAllProvinceController = async (req: Request, res: Response) => {
 
 export const getDistrictByProvinceController = async (req: Request, res: Response) => {
   const provinceCode = req.params.provinceCode
-  console.log('provinceCode: ', provinceCode)
   const result =
     provinceCode !== '-1'
       ? await addressServices.getDistrictByProvinceService(provinceCode)
       : []
-  // console.log('result: ', result)
   return res.json(result)
 }
 
