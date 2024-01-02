@@ -2,7 +2,6 @@ import { CreateANewCarRequestBody } from '~/models/requests/Car.requests'
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import carServices from '~/services/cars.services'
-import databaseService from '~/services/database.services'
 import { TokenPayload } from '~/models/requests/User.requests'
 import { ErrorWithStatus } from '~/models/Errors'
 import httpStatus from '~/constants/httpStatus'
@@ -12,7 +11,6 @@ export const createNewCarController = async (
   res: Response
 ) => {
   // await databaseService.cars.deleteMany({})
-
   const dataNewCar: CreateANewCarRequestBody = req.body
   const result = await carServices.createNewCar(dataNewCar)
   return res.json(result)

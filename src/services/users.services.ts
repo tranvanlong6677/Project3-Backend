@@ -37,20 +37,6 @@ class UserService {
     })
   }
 
-  private signEmailVerifyToken(user_id: string) {
-    return signToken({
-      payload: {
-        user_id,
-        token_type: TokenType.EmailVerifyToken
-      },
-      privateKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string,
-
-      options: {
-        expiresIn: process.env.EMAIL_VERIFY_TOKEN_EXPIRES_IN
-      }
-    })
-  }
-
   private signForgotPasswordToken(user_id: string) {
     return signToken({
       payload: {
@@ -210,6 +196,10 @@ class UserService {
         returnDocument: 'after',
         projection: { password: 0, created_at: 0, updated_at: 0 }
       }
+    )
+    await databaseService.cars.updateMany(
+      { owner_id: new ObjectId(user_id) },
+      { $set: { owner_name: result?.name } }
     )
     return {
       message: userMessage.UPDATE_USER_INFO_SUCCESS,
